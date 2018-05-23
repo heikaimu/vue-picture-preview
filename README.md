@@ -2,7 +2,7 @@ Vue的图片查看组件
 
 ### 安装
 ```
-npm i vue-simple-picture-privew -S
+npm i vue-simple-picture-preview -S
 ```
 
 ### 引入
