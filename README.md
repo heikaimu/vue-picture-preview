@@ -10,11 +10,11 @@ npm i vue-simple-picture-preview -S
 test.vue
 ```
 <template>
-  <div id="app">
-    <VuePicturePreview
+
+  <VuePicturePreview
       :pictureList="pictureList"
     ></VuePicturePreview>
-  </div>
+    
 </template>
 import VuePicturePreview from 'vue-simple-picture-preview';
 export default {
