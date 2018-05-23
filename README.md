@@ -13,6 +13,7 @@ test.vue
 
   <VuePicturePreview
       :pictureList="pictureList"
+      :isMenu="true"
     ></VuePicturePreview>
     
 </template>
