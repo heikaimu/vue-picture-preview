@@ -3,7 +3,7 @@
       <!--预览图片列表-->
       <div class="small-picture-list">
         <div class="item"
-             v-for="(item,index) in pictureList"
+             v-for="(item,index) in previewList"
              @mouseover="showIconIndex=index"
              @mouseout="showIconIndex=-1"
              @click="showBigPicturePreview(item, index)">
@@ -45,10 +45,18 @@
 <script>
     export default {
       props: {
+        // 图片
         pictureList: {
           type: Array,
           default: () => {
             return []
+          }
+        },
+        // 数据配置
+        props: {
+          type: Object,
+          default: () => {
+            return {}
           }
         },
         // 是否旋转
@@ -82,6 +90,7 @@
       },
       data() {
         return {
+          previewList: [],
           startMove: false,
           left: 0, // 图片left定位值
           top: 0, // 图片top定位值
@@ -106,6 +115,17 @@
           ifShowPicturePreview: false
         }
       },
+      mounted() {
+        this.previewList = this.pictureList.map((item) => {
+          let val = '';
+          if (this.props.domain) {
+            val = `${this.props.domain}${this.props.key ? item[this.props.key] : item}`;
+          } else {
+            val = this.props.key ? item[this.props.key] : item;
+          }
+          return val;
+        });
+      },
       methods: {
         // 初始换图片状态
         imageLoaded() {
@@ -123,7 +143,7 @@
           this.currentPicSrc = item;
           this.currentPicIndex = index;
           this.ifShowPicturePreview = true;
-          const l = this.pictureList.length;
+          const l = this.previewList.length;
           if (index === 0) {
             this.isFirst = true;
           } else if (index === l - 1) {
@@ -142,7 +162,7 @@
         // 前进后退
         moveIndex(way) {
           this.rotateVal = 0;
-          const l = this.pictureList.length;
+          const l = this.previewList.length;
           way === -1 ? this.currentPicIndex -= 1 : this.currentPicIndex +=1;
           if (this.currentPicIndex <= 0) {
             this.currentPicIndex = 0
@@ -154,7 +174,8 @@
             this.isFirst = false;
             this.isLast = false;
           }
-          this.currentPicSrc = this.pictureList[this.currentPicIndex];
+          this.currentPicSrc = this.previewList[this.currentPicIndex];
+          console.log(this.currentPicSrc);
           const params = {
             direction: way,
             src: this.currentPicSrc,
