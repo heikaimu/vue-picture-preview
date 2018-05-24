@@ -48,7 +48,7 @@ isMousewheelScale // 鼠标滚轮缩放，默认true
 move // 前进后退时候的派发事件，返回字段
 
 ```
-direction // 1为前进，2位后退
+direction // 1为前进，-1位后退
 src // 当前显示的图片地址
 index // 当前图片索引值
 isFirst // 是否为第一张
