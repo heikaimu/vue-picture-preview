@@ -11,12 +11,10 @@ test.vue
 ```
 <template>
 
-  <VuePicturePreview
-      :pictureList="pictureList"
-      :isMenu="true"
-    ></VuePicturePreview>
+  <VuePicturePreview :pictureList="pictureList"></VuePicturePreview>
 
 </template>
+
 import VuePicturePreview from 'vue-simple-picture-preview';
 export default {
     data() {
@@ -34,10 +32,39 @@ export default {
   }
 ```
 
-### 参数
+### 配置参数
 ```
 isRotate  // 是否显示旋转，默认true
 isMove // 是否显示前进后退，默认true
+isScale // 是否显示放大缩小，默认true
 isClikcImgClose  // 是否开启点击图片关闭弹出层，默认false
 isMenu // 是否显示按钮栏，默认true
+doubleRestore // 双击恢复图片初始状态, 默认true
+isMousewheelScale // 鼠标滚轮缩放，默认true
+```
+
+### 接口
+
+move // 前进后退时候的派发事件，返回字段
+
+```
+direction // 1为前进，2位后退
+src // 当前显示的图片地址
+index // 当前图片索引值
+isFirst // 是否为第一张
+isLast // 是否为最后一张
+```
+
+```
+ <PictureView
+      :pictureList="pictureList"
+      :isMenu="true"
+      :isRotate="false"
+      :isMove="true"
+      :isScale="false"
+      :isClikcImgClose="true"
+      :isMousewheelScale="true"
+      :doubleRestore="false"
+      @move="handleMove"
+    ></PictureView>
 ```
