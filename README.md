@@ -100,16 +100,21 @@ isFirst // 是否为第一张
 isLast // 是否为最后一张
 ```
 
+完整配置
 ```
- <PictureView
-      :pictureList="pictureList"
-      :isMenu="true"
-      :isRotate="false"
-      :isMove="true"
-      :isScale="false"
-      :isClikcImgClose="true"
-      :isMousewheelScale="true"
-      :doubleRestore="false"
-      @move="handleMove"
-    ></PictureView>
+<PictureView
+              :pictureList="pictureList"
+              :props="defaultProps"
+              :width="form.width"
+              :height="form.width"
+              :borderRadius="form.borderRadius"
+              :isMenu="form.isMenu"
+              :isRotate="form.isRotate"
+              :isMove="form.isMove"
+              :isScale="form.isScale"
+              :isSingleClickToClose="form.isSingleClickToClose"
+              :doubleRestore="form.doubleRestore"
+              :isMousewheelScale="form.isMousewheelScale"
+              @move="handleNext"
+            ></PictureView>
 ```
