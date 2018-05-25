@@ -3,10 +3,11 @@
       <!--预览图片列表-->
       <div class="small-picture-list">
         <div class="item"
-             v-for="(item,index) in previewList"
+             :style="{'width':`${width}px`, 'height':`${height}px`, 'borderRadius':`${borderRadius}px`}"
+             v-for="(item,index) in thumbnailList"
              @mouseover="showIconIndex=index"
              @mouseout="showIconIndex=-1"
-             @click="showBigPicturePreview(item, index)">
+             @click="showBigPicturePreview(index)">
           <div class="picture" :style="{background: `url(${item}) no-repeat center center / cover`}"></div>
           <div class="search-icon" :class="{'active': showIconIndex===index}"></div>
         </div>
@@ -14,8 +15,9 @@
       <!--放大层-->
       <transition name="fade">
       <div class="big-picture-preview" v-if="ifShowPicturePreview">
-        <div class="picture-wrapper" :style="{'bottom':isMenu?'60px':'100px'}" ref="imgWrapper">
+        <div class="picture-wrapper" :style="{'bottom':isMenu?'60px':'100px'}" ref="imgWrapper" @click="singleClick">
           <img
+            :class="{'show':isShowPic}"
             :src="currentPicSrc"
             alt=""
             :style="{'transform': `rotate(${rotateVal}deg) scale(${scaleVal})`, 'left': `${left}px`, 'top': `${top}px`}"
@@ -27,6 +29,7 @@
             @mousewheel="mousewheel"
             @click="doubleClick"
           >
+          <div class="loading" v-show="!isShowPic"></div>
         </div>
         <div class="menu-wrapper" v-if="isMenu">
           <div class="item prev" :class="{'disabled':isFirst}" @click="moveIndex(-1)" v-if="isMove"></div>
@@ -59,6 +62,18 @@
             return {}
           }
         },
+        // 缩略图宽度
+        width: {
+          default: 100
+        },
+        // 缩略图高度
+        height: {
+          default: 100
+        },
+        // 缩略图圆角
+        borderRadius: {
+          default: 5
+        },
         // 是否旋转
         isRotate: {
           default: true
@@ -71,8 +86,8 @@
         isScale: {
           default: true
         },
-        // 是否单击图片关闭
-        isClikcImgClose: {
+        // 是否单机黑框关闭弹出层
+        isSingleClickToClose: {
           default: true
         },
         // 是否显示底部按钮
@@ -90,12 +105,14 @@
       },
       data() {
         return {
-          previewList: [],
+          isShowPic: false, // 图片加载完成之后再显示
+          thumbnailList: [], // 缩略图
+          originalList: [], // 原图
           startMove: false,
           left: 0, // 图片left定位值
           top: 0, // 图片top定位值
-          width: 0, // 图片初始宽度
-          height: 0, // 图片初始高度
+          imgWidth: 0, // 图片初始宽度
+          imgHeight: 0, // 图片初始高度
           startX: 0, // 触摸位置X
           startY: 0, // 触摸位置Y
           disX: 0, // 移动距离X
@@ -116,42 +133,74 @@
         }
       },
       mounted() {
-        this.previewList = this.pictureList.map((item) => {
-          let val = '';
-          if (this.props.domain) {
-            val = `${this.props.domain}${this.props.key ? item[this.props.key] : item}`;
-          } else {
-            val = this.props.key ? item[this.props.key] : item;
-          }
-          return val;
-        });
+        this.pageInit();
+        console.log(this.props);
+      },
+      watch: {
+        // 监听当前大图的url变化，变化了就先隐藏图片待图片加载完成之后再显示
+        currentPicSrc() {
+          this.isShowPic = false;
+        },
+        // 数据配置参数变化时候
+        props: {
+          handler: function() {
+            this.pageInit();
+            console.log(this.props);
+          },
+          deep: true
+        }
       },
       methods: {
+        // 数据初始化
+        pageInit() {
+          this.originalList = [];
+          this.thumbnailList = [];
+          this.pictureList.forEach((item) => {
+            const domain = this.props.domain ? this.props.domain : '';
+            const originalUrl = `${this.props.originalKey ? item[this.props.originalKey] : item}`;
+            this.originalList.push(`${domain}${originalUrl}`);
+            const thumbnailUrl = `${this.props.thumbnailKey ? item[this.props.thumbnailKey] : originalUrl}`;
+            this.thumbnailList.push(`${domain}${thumbnailUrl}`);
+          });
+        },
         // 初始换图片状态
         imageLoaded() {
-          this.rotateVal = 0;
-          this.scaleVal = 1;
-          this.width = this.$refs.img.width;
-          this.height = this.$refs.img.height;
-          const imgWrapperWidth = this.$refs.imgWrapper.offsetWidth;
-          const imgWrapperHeight = this.$refs.imgWrapper.offsetHeight;
-          this.left = (imgWrapperWidth - this.width) / 2;
-          this.top = (imgWrapperHeight - this.height) / 2;
+          this.isShowPic = true;
+          // 在显示图片之后, 设置一个延迟时间重置图片位置，否则图片位置错乱
+          setTimeout(() => {
+            this.rotateVal = 0;
+            this.scaleVal = 1;
+            this.imgWidth = this.$refs.img.width;
+            this.imgHeight = this.$refs.img.height;
+            const imgWrapperWidth = this.$refs.imgWrapper.offsetWidth;
+            const imgWrapperHeight = this.$refs.imgWrapper.offsetHeight;
+            this.left = (imgWrapperWidth - this.imgWidth) / 2;
+            this.top = (imgWrapperHeight - this.imgHeight) / 2;
+          }, 50)
         },
-        // 打开大图
-        showBigPicturePreview(item, index) {
-          this.currentPicSrc = item;
-          this.currentPicIndex = index;
-          this.ifShowPicturePreview = true;
-          const l = this.previewList.length;
-          if (index === 0) {
+        // 判断是否最后一页和第一页
+        chargeFirstOrLast(l) {
+          if ((this.currentPicIndex === 0 || this.currentPicIndex === l - 1) && l === 1) {
             this.isFirst = true;
-          } else if (index === l - 1) {
+            this.isLast = true;
+          } else if (this.currentPicIndex === 0) {
+            this.isFirst = true;
+            this.isLast = false;
+          } else if (this.currentPicIndex === l - 1) {
+            this.isFirst = false;
             this.isLast = true;
           } else {
             this.isFirst = false;
             this.isLast = false;
           }
+        },
+        // 打开大图
+        showBigPicturePreview(index) {
+          this.currentPicSrc = this.originalList[index];
+          this.currentPicIndex = index;
+          this.ifShowPicturePreview = true;
+          const l = this.originalList.length;
+          this.chargeFirstOrLast(l);
         },
         // 关闭大图
         closeBigPicturePreview() {
@@ -162,20 +211,15 @@
         // 前进后退
         moveIndex(way) {
           this.rotateVal = 0;
-          const l = this.previewList.length;
+          const l = this.originalList.length;
           way === -1 ? this.currentPicIndex -= 1 : this.currentPicIndex +=1;
           if (this.currentPicIndex <= 0) {
             this.currentPicIndex = 0
-            this.isFirst = true;
           } else if (this.currentPicIndex >= l - 1) {
             this.currentPicIndex = l - 1;
-            this.isLast = true;
-          } else {
-            this.isFirst = false;
-            this.isLast = false;
           }
-          this.currentPicSrc = this.previewList[this.currentPicIndex];
-          console.log(this.currentPicSrc);
+          this.chargeFirstOrLast(l);
+          this.currentPicSrc = this.originalList[this.currentPicIndex];
           const params = {
             direction: way,
             src: this.currentPicSrc,
@@ -200,7 +244,7 @@
               this.scaleVal -= scale;
             }
           } else {
-            if (this.scaleVal >= 1.5) {
+            if (this.scaleVal >= 2) {
               this.scaleVal = oldVal;
             } else {
               this.scaleVal += scale;
@@ -250,20 +294,26 @@
             });
           }
         },
-        // 双击重置图片状态，单击关闭
-        doubleClick() {
+        // 双击重置图片状态
+        doubleClick(e) {
+          e = e || event;
+          e.stopPropagation();
           this.clickTime += 1;
           setTimeout(() => {
             if (this.clickTime == 2) { // 如果是双击重置图片
               this.removeClose = false;
               if (this.doubleRestore) this.imageLoaded();
-            } else { // 是单击关闭图层
-              if (this.isClikcImgClose && this.removeClose) {
-                this.closeBigPicturePreview();
-              }
             }
             this.clickTime = 0;
           }, 300)
+        },
+        // 单层外层关闭图片
+        singleClick(e) {
+          e = e || event;
+          e.stopPropagation();
+          if (this.isSingleClickToClose) {
+            this.closeBigPicturePreview();
+          }
         },
         // 节流
         throttle(func) {
@@ -287,13 +337,11 @@
       flex-wrap: wrap;
       padding: 5px;
       .item{
-        width: 100px;
-        height: 100px;
         margin: 5px;
         background-color: #ccc;
-        border-radius: 5px;
         overflow: hidden;
         position: relative;
+        transition: .1s;
         .picture{
           width: 100%;
           height: 100%;
@@ -347,6 +395,33 @@
           left: 0;
           top: 0;
           cursor: move;
+          opacity: 0;
+          transition: .3s;
+          &.show{
+            opacity: 1;
+          }
+        }
+        .loading{
+          width: 32px;
+          height: 32px;
+          background: url("./loading.png");
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          margin-left: -16px;
+          margin-top: -16px;
+          -webkit-animation:scale 2s infinite linear ;
+        }
+        @-webkit-keyframes scale {
+          0%{
+            -webkit-transform: rotate(0deg);
+          }
+          50%{
+            -webkit-transform: rotate(180deg);
+          }
+          100%{
+            -webkit-transform: rotate(360deg);
+          }
         }
       }
       .menu-wrapper{
@@ -362,7 +437,6 @@
         .item{
           width: 40px;
           height: 40px;
-          background: #444;
           margin: 0 10px;
           &.prev{
             background: url("./left-arrow.png") no-repeat center center;

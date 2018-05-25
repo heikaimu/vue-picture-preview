@@ -73,7 +73,7 @@ pcitureList: [
 isRotate  // 是否显示旋转，默认true
 isMove // 是否显示前进后退，默认true
 isScale // 是否显示放大缩小，默认true
-isClikcImgClose  // 是否开启点击图片关闭弹出层，默认false
+isSingleClickToClose  // 是否开启点击黑框关闭弹出层，默认true
 isMenu // 是否显示按钮栏，默认true
 doubleRestore // 双击恢复图片初始状态, 默认true
 isMousewheelScale // 鼠标滚轮缩放，默认true
