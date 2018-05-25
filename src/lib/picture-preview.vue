@@ -20,7 +20,7 @@
             :class="{'show':isShowPic}"
             :src="currentPicSrc"
             alt=""
-            :style="{'transform': `rotate(${rotateVal}deg) scale(${scaleVal})`, 'left': `${left}px`, 'top': `${top}px`}"
+            :style="{'transition': `${imgTransition}s`, 'transform': `rotate(${rotateVal}deg) scale(${scaleVal})`, 'left': `${left}px`, 'top': `${top}px`}"
             ref="img"
             @load="imageLoaded"
             @mousedown="touchStart"
@@ -129,7 +129,8 @@
           isLast: false,
           rotateVal: 0,
           scaleVal: 1,
-          ifShowPicturePreview: false
+          ifShowPicturePreview: false,
+          imgTransition: 0.3
         }
       },
       mounted() {
@@ -255,6 +256,7 @@
         touchStart(e) {
           e.preventDefault();
           e = e || event;
+          this.imgTransition = 0;
           this.removeClose = true;
           this.startX = e.clientX;
           this.startY = e.clientY;
@@ -275,6 +277,7 @@
         },
         // 滑动结束
         touchEnd(e) {
+          this.imgTransition = 0.3;
           this.startMove = false;
           this.lastDisX = 0;
           this.lastDisY = 0;
@@ -396,7 +399,6 @@
           top: 0;
           cursor: move;
           opacity: 0;
-          transition: .3s;
           &.show{
             opacity: 1;
           }
