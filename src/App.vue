@@ -25,7 +25,7 @@
   import PictureView from './lib/picture-preview.vue';
 export default {
   data() {
-   return {tupianjiazai d
+   return {
      pictureList: [
        {
          thumbnail: '/20180525091245.jpg?imageView2/5/w/200/h/200/q/75|imageslim',
