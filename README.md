@@ -1,5 +1,7 @@
 Vue的图片查看组件
 
+[演示地址]:https://heikaimu.github.io/picture-preview-example/code/dist/index.html#/
+
 ### 安装
 ```
 npm i vue-simple-picture-preview -S
