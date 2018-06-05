@@ -13,11 +13,11 @@ test.vue
 ```
 <template>
 
-  <VuePicturePreview :pictureList="pictureList"></VuePicturePreview>
+  <PictureView :pictureList="pictureList"></PictureView>
 
 </template>
 
-import VuePicturePreview from 'vue-simple-picture-preview';
+import PictureView from 'vue-simple-picture-preview';
 export default {
     data() {
       return {
@@ -25,7 +25,7 @@ export default {
       }
     },
     components: {
-      VuePicturePreview
+      PictureView
     }
   }
 ```
