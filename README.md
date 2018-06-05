@@ -13,7 +13,7 @@ test.vue
 ```
 <template>
 
-  <PictureView :pictureList="pictureList"></PictureView>
+  <PictureView v-if="pictureList" :pictureList="pictureList"></PictureView>
 
 </template>
 
