@@ -151,7 +151,7 @@
           deep: true
         },
         // 动态传入pictureList造成数据还是以前图片问题
-        pictureList: function(newValue, oldVal) {
+        pictureList: function(newVal, oldVal) {
           this.pictureList = newVal
           this.pageInit()
         }
