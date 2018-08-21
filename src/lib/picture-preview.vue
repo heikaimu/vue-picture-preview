@@ -149,6 +149,11 @@
             console.log(this.props);
           },
           deep: true
+        },
+        // 动态传入pictureList造成数据还是以前图片问题
+        pictureList: function(newValue, oldVal) {
+          this.pictureList = newVal
+          this.pageInit()
         }
       },
       methods: {
