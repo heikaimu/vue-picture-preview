@@ -2,15 +2,39 @@
     <div class="picture-preview-container">
       <!--预览图片列表-->
       <div class="small-picture-list">
+        <transition-group name="list-complete" tag="div">
         <div class="item"
              :style="{'width':`${width}px`, 'height':`${height}px`, 'borderRadius':`${borderRadius}px`}"
              v-for="(item,index) in thumbnailList"
+             :key="item"
              @mouseover="showIconIndex=index"
              @mouseout="showIconIndex=-1"
-             @click="showBigPicturePreview(index)">
+             >
           <div class="picture" :style="{background: `url(${item}) no-repeat center center / cover`}"></div>
-          <div class="search-icon" :class="{'active': showIconIndex===index}"></div>
+          <template v-if="!isEdit">
+            <div class="search-icon" :class="{'active': showIconIndex===index}" @click="showBigPicturePreview(index)"></div>
+          </template>
+          <template v-else>
+            <div class="many-icons" :class="{'active': showIconIndex===index}">
+              <ul>
+                <li class="icons">
+                  <div class="icon prev" @click="prevPicture(index)" title="前进"></div>
+                  <div class="icon next" @click="nextPicture(index)"></div>
+                </li>
+                <li class="icons">
+                  <div class="icon search" @click="showBigPicturePreview(index)"></div>
+                  <div class="icon remove" @click="removePicture(index)"></div>
+                </li>
+                <li class="icons">
+                  <div class="icon first" @click="topPicture(index)" title="置顶"></div>
+                  <div class="icon last" @click="bottomPicture(index)"></div>
+                </li>
+              </ul>
+            </div>
+          </template>
         </div>
+        </transition-group>
+        <slot></slot>
       </div>
       <!--放大层-->
       <transition name="fade">
@@ -101,6 +125,10 @@
         // 双击恢复
         doubleRestore: {
           default: true
+        },
+        // 是否带删除功能
+        isEdit: {
+          default: false
         }
       },
       data() {
@@ -149,6 +177,9 @@
             console.log(this.props);
           },
           deep: true
+        },
+        pictureList() {
+          this.pageInit();
         }
       },
       methods: {
@@ -318,6 +349,65 @@
             this.closeBigPicturePreview();
           }
         },
+        // 删除图片
+        removePicture(index) {
+          this.pictureList.splice(index, 1);
+          this.$emit('update: pictureList', this.pictureList);
+          this.$emit('deletePicture', {
+            result: this.pictureList,
+            index: index
+          })
+        },
+        // 前进
+        prevPicture(index) {
+          if (index > 0) {
+            const item = [...this.pictureList][index];
+            this.pictureList.splice(index, 1);
+            this.pictureList.splice(index - 1, 0, item);
+            this.$emit('prevPicture', {
+              result: this.pictureList,
+              index: index
+            })
+          }
+        },
+        // 置顶
+        topPicture(index) {
+          if (index > 0) {
+            const item = [...this.pictureList][index];
+            this.pictureList.splice(index, 1);
+            this.pictureList.splice(0, 0, item);
+            this.$emit('topPicture', {
+              result: this.pictureList,
+              index: index
+            })
+          }
+        },
+        // 后退
+        nextPicture(index) {
+          const length = this.pictureList.length;
+          if (index < length - 1) {
+            const item = [...this.pictureList][index];
+            this.pictureList.splice(index, 1);
+            this.pictureList.splice(index + 1, 0, item);
+            this.$emit('nextPicture', {
+              result: this.pictureList,
+              index: index
+            })
+          }
+        },
+        // 置后
+        bottomPicture(index) {
+          const length = this.pictureList.length;
+          if (index < length - 1) {
+            const item = [...this.pictureList][index];
+            this.pictureList.splice(index, 1);
+            this.pictureList.splice(length - 1, 0, item);
+            this.$emit('bottomPicture', {
+              result: this.pictureList,
+              index: index
+            })
+          }
+        },
         // 节流
         throttle(func) {
           if (this.time) {
@@ -340,11 +430,12 @@
       flex-wrap: wrap;
       padding: 5px;
       .item{
+        display: inline-block;
         margin: 5px;
         background-color: #ccc;
         overflow: hidden;
         position: relative;
-        transition: .1s;
+        transition: .3s;
         .picture{
           width: 100%;
           height: 100%;
@@ -375,6 +466,65 @@
             background: url("./biger.png");
           }
         }
+        .many-icons{
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          z-index: 3;
+          top: 0;
+          left: 0;
+          background: rgba(0,0,0,0.3);
+          opacity: 0;
+          transition: .2s;
+          transform: scale(0.3);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          &.active{
+            opacity: 1;
+            transform: scale(1);
+          }
+          .icons{
+            width: 100%;
+            padding: 5px 0;
+            display: flex;
+            flex: 1;
+            align-items: center;
+            justify-content: center;
+            .icon{
+              width: 16px;
+              height: 16px;
+              margin: 0 8px;
+              transition: .2s;
+              background-repeat: no-repeat;
+              background-position: center center;
+              background-size: 100% 100%;
+              &:hover{
+                background-color: #409EFF;
+              }
+              &.remove{
+                background-image: url("./delete.png");
+              }
+              &.search{
+                background-image: url("./search.png");
+              }
+              &.prev{
+                background-image: url("./prev.png");
+              }
+              &.next{
+                background-image: url("./next.png");
+              }
+              &.first{
+                background-image: url("./first.png");
+              }
+              &.last{
+                background-image: url("./last.png");
+              }
+            }
+          }
+        }
+
+
       }
     }
     .big-picture-preview{
@@ -479,4 +629,13 @@
   .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
     opacity: 0;
   }
+
+  .list-complete-enter, .list-complete-leave-to
+/* .list-complete-leave-active for below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.list-complete-leave-active {
+  position: absolute;
+}
 </style>
