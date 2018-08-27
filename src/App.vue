@@ -14,10 +14,15 @@
     <PictureView
       :pictureList="pictureList"
       :props="defaultProps"
+      :keyboardControl="keyboardControl"
+      :mousewheelScaleSpeed="mousewheelScaleSpeed"
+      :spaceBetween="spaceBetween"
       @move="handleNext"
     ></PictureView>
     <button @click="changeToThumbnail">全部缩略图</button>
     <button @click="changeToOriginal">全部原图</button>
+    <input type="text" v-model="mousewheelScaleSpeed">
+    <button @click="keyboardControl=!keyboardControl">keyboardControl{{keyboardControl}}</button>
   </div>
 </template>
 
@@ -26,6 +31,9 @@
 export default {
   data() {
    return {
+     keyboardControl: true,
+     mousewheelScaleSpeed: 0.1,
+     spaceBetween: 5,
      pictureList: [
        {
          thumbnail: '/20180525091245.jpg?imageView2/5/w/200/h/200/q/75|imageslim',
@@ -53,7 +61,6 @@ export default {
   },
   methods: {
     handleNext(data) {
-      console.log(data);
     },
     changeToThumbnail() {
       this.defaultProps.originalKey = 'thumbnail';
