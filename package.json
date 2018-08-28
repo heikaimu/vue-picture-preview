@@ -1,7 +1,7 @@
 {
   "name": "vue-simple-picture-preview",
   "description": "A Vue component to preview pictures",
-  "version": "1.1.4",
+  "version": "1.1.9",
   "author": "heikaimu",
   "license": "MIT",
   "private": false,
