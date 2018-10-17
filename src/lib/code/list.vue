@@ -135,8 +135,8 @@ export default {
       });
       this.imagesList[index].move = true;
       const moveCard = this.$refs[`item_${index}`][0]; // 当前移动的这个块的参数
-      this.oldPosition.left = moveCard.getBoundingClientRect().left;
-      this.oldPosition.top = moveCard.getBoundingClientRect().top;
+      this.oldPosition.left = parseInt(moveCard.style.left.replace("px", ""));
+      this.oldPosition.top = parseInt(moveCard.style.top.replace("px", ""));
       this.oldPointer.x = e.clientX;
       this.oldPointer.y = e.clientY;
       this.startMove = true;

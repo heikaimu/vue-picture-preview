@@ -135,11 +135,19 @@ export default {
       const moveCard = this.pictureList.splice(data.move, 1);
       this.pictureList.splice(data.replace, 0, ...moveCard);
       this.pageInit();
+      this.$emit("pictureUpdated", {
+        action: "move",
+        newList: this.pictureList
+      });
     },
     // 删除图片
     remove(index) {
       this.pictureList.splice(index, 1);
       this.pageInit();
+      this.$emit("pictureUpdated", {
+        action: "delete",
+        newList: this.pictureList
+      });
     },
     // 查看大图
     showOriginal(index) {

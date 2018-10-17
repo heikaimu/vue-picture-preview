@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+    <div class="content-box">
+      <div>
     <PictureView 
     :pictureList="pictureList" 
     :props="defaultProps"
@@ -12,10 +14,13 @@
     :mousewheelScaleSpeed="0.06"
     :keyboardControl="false"
     :menuType="'all'"
+    @pictureUpdated="pictureUpdated"
     >
       <button @click="addPic">添加图片</button>
     </PictureView>
     <button @click="showPic">看图片地址</button>
+  </div>
+  </div>
   </div>
 </template>
 
@@ -77,6 +82,9 @@ export default {
           "/20180525091249.jpg?imageView2/5/w/200/h/200/q/75|imageslim",
         original: "/20180525091249.jpg"
       });
+    },
+    pictureUpdated(data) {
+      console.log(data)
     }
   },
   components: {
@@ -96,5 +104,11 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+.content-box{
+  width: 600px;
+  position: fixed;
+  left: 100px;
+  right: 200px;
 }
 </style>
