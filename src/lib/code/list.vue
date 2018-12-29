@@ -15,7 +15,7 @@
             v-for="(item,index) in thumbnailList" :key="index" 
             :style="{'width':`${width}px`, 'height':`${height}px`, 'margin':`${spaceBetween}px`}">
             </li>
-            <li :style="{'width':`${width}px`, 'height':`${height}px`, 'margin':`${spaceBetween}px`}">
+            <li :style="{'width':`auto`, 'height':`auto`, 'margin':`${spaceBetween}px`}">
               <slot></slot>
             </li>
           </ul>
