@@ -1,7 +1,32 @@
 <template>
 	<div class="preview-container">
-		<picture-list :items="listItems" :cellWidth="width" :cellHeight="height" :borderRadius="borderRadius" :spaceBetween="spaceBetween" :draggable="isEdit" @sort="sort" @click="onClick"></picture-list>
-		<picture-float :items="floatItems" :initSlide.sync="initSlide" :show.sync="showFloat" :mouseScrollable="mouseScrollable" :mouseScrollSpeed="mouseScrollSpeed"></picture-float>
+		<picture-list 
+			:items="listItems"
+			:cellWidth="width"
+			:cellHeight="height"
+			:borderRadius="borderRadius"
+			:spaceBetween="spaceBetween"
+			:draggable="isEdit"
+			:containerWidth="containerWidth"
+			:center="center"
+			@sort="sort"
+			@click="onClick"
+			@onDragstart="onDragstart"
+			@onDragend="onDragend"
+			>
+		</picture-list>
+		<picture-float
+			:items="floatItems"
+			:initSlide.sync="initSlide"
+			:show.sync="showFloat"
+			:mouseScrollable="mouseScrollable"
+			:mouseScrollSpeed="mouseScrollSpeed"
+			:thumbnail="thumbnail"
+			:thumbnailWidth="thumbnailWidth"
+			:thumbnailHeight="thumbnailHeight"
+			:menuType="menuType"
+		>
+		</picture-float>
 	</div>
 </template>
 
@@ -43,6 +68,30 @@ export default {
 		mouseScrollSpeed: {
 			type: Number,
 			default: 0.05
+		},
+		thumbnail: {
+			type: Boolean,
+			default: true
+		},
+		thumbnailWidth: {
+			type: Number,
+			default: 50
+		},
+		thumbnailHeight: {
+			type: Number,
+			default: 70
+		},
+		menuType: {
+			type: String,
+			default: "all"
+		},
+		containerWidth: {
+			type: Number,
+			default: -1
+		},
+		center: {
+			type: Boolean,
+			default: false
 		}
 	},
 	data() {
@@ -50,54 +99,15 @@ export default {
 			listItems: [],
 			floatItems: [],
 			showFloat: false,
-			initSlide: 0
+			initSlide: -1
 		};
 	},
 	watch: {
 		pictureList: {
-			handler(nextItems = []) {
-				if (nextItems.length !== 0) {
-					if (typeof nextItems[0] === "object") {
-						if (this.defaultProps && this.defaultProps.domain) {
-							this.listItems = this.pictureList.map(item => {
-								return {
-									main: item,
-									thumbnailUrl: `${this.defaultProps.domain}${
-										item[this.defaultProps.thumbnailKey]
-									}`,
-									originalUrl: `${this.defaultProps.domain}${
-										item[this.defaultProps.originalKey]
-									}`
-								};
-							});
-						} else {
-							this.listItems = this.pictureList.map(item => {
-								return {
-									main: item,
-									thumbnailUrl: `${item[this.defaultProps.thumbnailKey]}`,
-									originalUrl: `${item[this.defaultProps.originalKey]}`
-								};
-							});
-						}
-					} else if (typeof nextItems[0] === "string") {
-						if (this.defaultProps && this.defaultProps.domain) {
-							this.listItems = this.pictureList.map(item => {
-								return {
-									main: item,
-									thumbnailUrl: `${this.defaultProps.domain}${item}`,
-									originalUrl: `${this.defaultProps.domain}${item}`
-								};
-							});
-						} else {
-							this.listItems = this.pictureList.map(item => {
-								return {
-									main: item,
-									thumbnailUrl: `${item}`,
-									originalUrl: `${item}`
-								};
-							});
-						}
-					}
+			handler(nextItems = [], oldItems = []) {
+				// 只有当心的数据大于老数据的长度的时候才会重新构造数据，否则会起动画冲突
+				if (nextItems.length > oldItems.length) {
+					this.createdList(nextItems);
 				}
 			},
 			immediate: true
@@ -112,16 +122,67 @@ export default {
 		}
 	},
 	methods: {
+		createdList(nextItems) {
+			if (nextItems.length !== 0) {
+				if (typeof nextItems[0] === "object") {
+					if (this.defaultProps && this.defaultProps.domain) {
+						this.listItems = this.pictureList.map(item => {
+							return {
+								main: item,
+								thumbnailUrl: `${this.defaultProps.domain}${
+									item[this.defaultProps.thumbnailKey]
+								}`,
+								originalUrl: `${this.defaultProps.domain}${
+									item[this.defaultProps.originalKey]
+								}`
+							};
+						});
+					} else {
+						this.listItems = this.pictureList.map(item => {
+							return {
+								main: item,
+								thumbnailUrl: `${item[this.defaultProps.thumbnailKey]}`,
+								originalUrl: `${item[this.defaultProps.originalKey]}`
+							};
+						});
+					}
+				} else if (typeof nextItems[0] === "string") {
+					if (this.defaultProps && this.defaultProps.domain) {
+						this.listItems = this.pictureList.map(item => {
+							return {
+								main: item,
+								thumbnailUrl: `${this.defaultProps.domain}${item}`,
+								originalUrl: `${this.defaultProps.domain}${item}`
+							};
+						});
+					} else {
+						this.listItems = this.pictureList.map(item => {
+							return {
+								main: item,
+								thumbnailUrl: `${item}`,
+								originalUrl: `${item}`
+							};
+						});
+					}
+				}
+			}
+		},
+		onClick(data) {
+			this.initSlide = data.sort;
+			this.floatItems = data.event.items;
+			this.showFloat = true;
+		},
 		sort(data) {
 			const list = data.items.map(item => {
 				return item.item.main;
 			});
 			this.$emit("updateList", list);
 		},
-		onClick(data) {
-			this.initSlide = data.sort;
-			this.floatItems = data.event.items;
-			this.showFloat = true;
+		onDragstart() {
+			this.$emit("onDragstart");
+		},
+		onDragend() {
+			this.$emit("onDragend");
 		}
 	},
 	components: {

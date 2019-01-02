@@ -9,8 +9,7 @@ const CLICK_PIXEL_DISTANCE = 5;
 export default {
 	props: {
 		imgSrc: {
-			type: String,
-			default: ""
+			type: String
 		},
 		mouseScrollable: {
 			type: Boolean
@@ -29,7 +28,8 @@ export default {
 			shiftStartY: 0,
 			mouseMoveStartX: 0,
 			mouseMoveStartY: 0,
-			scale: 1
+			scale: 1,
+			rotate: 0
 		};
 	},
 	watch: {
@@ -39,9 +39,9 @@ export default {
 	},
 	computed: {
 		style() {
-			const { left, top, scale } = this;
+			const { left, top, scale, rotate } = this;
 			return {
-				transform: `translate3d(${left}px, ${top}px, 0) scale(${scale})`
+				transform: `translate3d(${left}px, ${top}px, 0) scale(${scale}) rotate(${rotate}deg)`
 			};
 		},
 		left() {
@@ -123,10 +123,27 @@ export default {
 				}
 			}
 		},
+		onScale(val) {
+			if (val > 0) {
+				this.scale -= this.mouseScrollSpeed;
+				if (this.scale < 0.4) {
+					this.scale = 0.4;
+				}
+			} else {
+				this.scale += this.mouseScrollSpeed;
+				if (this.scale > 3) {
+					this.scale = 3;
+				}
+			}
+		},
+		onRotate(val) {
+			this.rotate += val;
+		},
 		resetImg() {
 			this.scale = 1;
 			this.shiftX = 0;
 			this.shiftY = 0;
+			this.rotate = 0;
 		}
 	},
 	beforeDestroy() {
@@ -137,14 +154,18 @@ export default {
 
 <style scoped lang="scss">
 .swiper-wrapper {
-	width: 100%;
-	height: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	img {
 		max-width: 100%;
 		max-height: 100%;
+		cursor: move;
 	}
 }
 </style>

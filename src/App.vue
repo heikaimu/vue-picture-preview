@@ -2,30 +2,37 @@
 	<div id="app">
 		<div class="content-box">
 			<div>
-				<!-- <PictureView :pictureList="pictureList" :props="defaultProps" :width="100" :height="100" :borderRadius="5" :spaceBetween="5" :isEdit="true" :isMousewheelScale="true" :mousewheelScaleSpeed="0.06" :keyboardControl="false" :menuType="'all'" @pictureUpdated="pictureUpdated">
-          <button @click="addPic">添加图片</button>
-        </PictureView>
-        <button @click="showPic">看图片地址</button> -->
-				<test :pictureList="pictureList" :mouseScrollable="true" :mouseScrollSpeed="0.1" :width="160" :height="160" :borderRadius="10" :spaceBetween="10" :isEdit="true" @sort="onSort" @updateList="updateList"></test>
+				<ppview 
+					:pictureList="pictureList"
+					:mouseScrollable="true"
+					:mouseScrollSpeed="0.1"
+					:width="160"
+					:height="160"
+					:borderRadius="10"
+					:spaceBetween="10"
+					:thumbnail="true"
+					:thumbnailWidth="50"
+					:thumbnailHeight="70"
+					:isEdit="true"
+					:containerWidth="800"
+					:center="false"
+					menuType="all"
+					@onDragstart="onDragstart"
+					@onDragend="onDragend"
+					@updateList="updateList"
+				>
+				</ppview>
 			</div>
-			<div style="height:2000px">
-				<ul>
-					<li></li>
-				</ul>
-			</div>
+			<button @click="addNewOne">新增</button>
 		</div>
 	</div>
 </template>
 
 <script>
-import test from "./lib/main/index";
-import PictureView from "./lib/code/index";
+import ppview from "./lib/main/index";
 export default {
 	data() {
 		return {
-			keyboardControl: true,
-			mousewheelScaleSpeed: 0.1,
-			spaceBetween: 5,
 			pictureList: [
 				"https://desk-fd.zol-img.com.cn/t_s960x600c5/g5/M00/0B/00/ChMkJ1wcloSIUYAuAAO3jLTBc34AAt6LAPy1R4AA7ek000.jpg",
 				"https://desk-fd.zol-img.com.cn/t_s960x600c5/g5/M00/0B/00/ChMkJ1wcloSITAcKAAMLsFkEUtAAAt6LAPvhBMAAwvI448.jpg",
@@ -72,41 +79,25 @@ export default {
 		};
 	},
 	methods: {
-		handleNext(data) {},
-		changeToThumbnail() {
-			this.defaultProps.originalKey = "thumbnail";
+		onDragstart() {
+			console.log("排序开始");
 		},
-		changeToOriginal() {
-			this.defaultProps.originalKey = "original";
-		},
-		showPic() {
-			console.log(
-				this.pictureList.map(item => {
-					return item.original;
-				})
-			);
-		},
-		addPic() {
-			this.pictureList.push({
-				thumbnail:
-					"/20180525091249.jpg?imageView2/5/w/200/h/200/q/75|imageslim",
-				original: "/20180525091249.jpg"
-			});
+		onDragend() {
+			console.log("排序结束");
 		},
 		updateList(list) {
-			// this.pictureList = list;
-			console.log(list);
+			this.pictureList = list;
 		},
-		pictureUpdated(data) {
-			console.log(data);
-		},
-		onSort(list) {
-			console.log(list);
+		addNewOne() {
+			let num = Math.random() * this.pictureList.length - 1;
+			num = Math.round(num);
+			num = Math.max(num, 0);
+			num = Math.min(num, this.pictureList.length - 1);
+			this.pictureList = [...this.pictureList, this.pictureList[num]];
 		}
 	},
 	components: {
-		PictureView,
-		test
+		ppview
 	}
 };
 </script>

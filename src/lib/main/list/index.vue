@@ -1,17 +1,36 @@
 <template>
 	<div class="picture-list" :style="style">
-		<item v-for="item in list" :key="item.index" :index="item.index" :sort="item.sort" :draggable="draggable" :dragDelay="dragDelay" :rowCount="rowCount" :rowShift="rowShift" :cellWidth="cellWidth+spaceBetween" :cellHeight="cellHeight+spaceBetween" @dragstart="onDragstart" @drag="onDrag" @click="onClick" @dragend="onDragend">
-			<div class="content" :style="contentStyle">
-				<div class="pic" :class="className" :style="{background:`url(${item.item.thumbnailUrl}) no-repeat center center / cover`,borderRadius:`${borderRadius}px`}">
-					<div class="remove-icon" @click.stop="removeItem(item)" v-if="draggable"></div>
-				</div>
-			</div>
+		<item v-for="item in list" 
+			:key="item.index" 
+			:index="item.index" 
+			:sort="item.sort" 
+			:draggable="draggable" 
+			:dragDelay="dragDelay" 
+			:rowCount="rowCount" 
+			:rowShift="rowShift" 
+			:cellWidth="cellWidth+spaceBetween" 
+			:cellHeight="cellHeight+spaceBetween"
+			@dragstart="onDragstart" 
+			@drag="onDrag" 
+			@click="onClick" 
+			@dragend="onDragend">
+			<icon 
+				:item="item"
+				:draggable="draggable"
+				:cellWidth="cellWidth"
+				:cellHeight="cellHeight"
+				:borderRadius="borderRadius"
+				:spaceBetween="spaceBetween"
+				:url="item.item.thumbnailUrl"
+				@removeItem="removeItem">
+			</icon>
 		</item>
 	</div>
 </template>
 
 <script>
 import item from "./item";
+import icon from "./icon";
 import windowSize from "../../../mixins/windowSize.js";
 export default {
 	mixins: [windowSize],
@@ -19,7 +38,7 @@ export default {
 		items: {
 			default: () => []
 		},
-		gridWidth: {
+		containerWidth: {
 			default: -1
 		},
 		cellWidth: {
@@ -66,17 +85,16 @@ export default {
 						sort: index
 					};
 				});
-				console.log(this.list);
 			},
 			immediate: true
 		}
 	},
 	computed: {
 		gridResponsiveWidth() {
-			if (this.gridWidth < 0) {
+			if (this.containerWidth < 0) {
 				return this.windowWidth;
 			} else {
-				return Math.min(this.windowWidth, this.gridWidth);
+				return Math.min(this.windowWidth, this.containerWidth);
 			}
 		},
 		rowCount() {
@@ -95,7 +113,10 @@ export default {
 			}
 		},
 		height() {
-			return Math.ceil(this.items.length / this.rowCount) * this.cellHeight;
+			return (
+				Math.ceil(this.items.length / this.rowCount) *
+				(this.cellHeight + this.spaceBetween)
+			);
 		},
 		style() {
 			return {
@@ -103,19 +124,6 @@ export default {
 				marginLeft: -this.spaceBetween / 2 + "px",
 				marginRight: -this.spaceBetween / 2 + "px"
 			};
-		},
-		contentStyle() {
-			return {
-				padding: this.spaceBetween / 2 + "px"
-			};
-		},
-		className() {
-			return [
-				{
-					view: !this.draggable,
-					drag: this.draggable
-				}
-			];
 		}
 	},
 	methods: {
@@ -136,19 +144,17 @@ export default {
 			//  })
 		},
 		onClick(event) {
-			if (!this.draggable) {
-				const data = {
-					sort: event.sort,
-					event: this.wrapEvent()
-				};
-				this.$emit("click", data);
-			}
-		},
-		onDragend() {
-			// console.log("移动结束");
+			const data = {
+				sort: event.sort,
+				event: this.wrapEvent()
+			};
+			this.$emit("click", data);
 		},
 		onDragstart() {
-			// console.log("移动开始");
+			this.$emit("onDragstart");
+		},
+		onDragend() {
+			this.$emit("onDragend");
 		},
 		onDrag(event) {
 			this.sortList(event.index, event.gridPosition);
@@ -209,7 +215,8 @@ export default {
 		}
 	},
 	components: {
-		item
+		item,
+		icon
 	}
 };
 </script>
@@ -219,80 +226,5 @@ export default {
 	display: block;
 	position: relative;
 	width: 100%;
-	.content {
-		width: 100%;
-		height: 100%;
-		box-sizing: border-box;
-		overflow: hidden;
-		position: relative;
-		.pic {
-			width: 100%;
-			height: 100%;
-			position: relative;
-			&.view {
-				cursor: pointer;
-				&:hover,
-				&:active {
-					&:after {
-						content: "";
-						display: block;
-						width: 30px;
-						height: 30px;
-						background: url("../../icons/view.png") no-repeat center center /
-							cover;
-						position: absolute;
-						left: 50%;
-						margin-left: -15px;
-						top: 50%;
-						margin-top: -15px;
-						z-index: 9;
-					}
-				}
-			}
-			&.drag {
-				cursor: pointer;
-				&:hover,
-				&:active {
-					&:after {
-						content: "";
-						display: block;
-						width: 30px;
-						height: 30px;
-						background: url("../../icons/drag.png") no-repeat center center /
-							cover;
-						position: absolute;
-						left: 50%;
-						margin-left: -15px;
-						top: 50%;
-						margin-top: -15px;
-						z-index: 9;
-					}
-				}
-			}
-			.remove-icon {
-				width: 24px;
-				height: 24px;
-				background-color: rgba(0, 0, 0, 0.5);
-				border-radius: 50%;
-				position: absolute;
-				right: 2px;
-				top: 2px;
-				transition: 0.2s;
-				cursor: pointer;
-				&:before {
-					content: "";
-					display: block;
-					width: 16px;
-					height: 16px;
-					margin: 4px;
-					background: url("../../icons/close.png");
-					transition: 0.2s;
-				}
-				&:hover {
-					background-color: #d81e06;
-				}
-			}
-		}
-	}
 }
 </style>

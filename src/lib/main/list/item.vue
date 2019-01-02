@@ -120,8 +120,8 @@ export default {
 				document.addEventListener("mouseup", this.documentMouseUp);
 				document.addEventListener("touchend", this.documentMouseUp);
 			} else {
-				let $event = this.wrapEvent(event);
-				this.$emit("click", $event);
+				document.addEventListener("mouseup", this.documentMouseUp);
+				document.addEventListener("touchend", this.documentMouseUp);
 			}
 		},
 		//拖拽开始，设置初始值，此时拖拽的起点终点都等于块的初始偏移值，监听移动事件，鼠标的初始位置为点击的位置
@@ -218,6 +218,7 @@ export default {
 	user-select: none;
 	transform: translate3d(0px, 0px, 0px);
 	z-index: 1;
+	cursor: pointer;
 }
 .item-animate {
 	transition: transform 800ms ease;
