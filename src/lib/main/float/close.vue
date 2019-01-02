@@ -17,7 +17,7 @@ export default {
 	position: absolute;
 	top: -40px;
 	right: -40px;
-	z-index: 99999;
+	z-index: 9999;
 	width: 80px;
 	height: 80px;
 	cursor: pointer;

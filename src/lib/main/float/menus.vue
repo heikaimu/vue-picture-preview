@@ -56,7 +56,7 @@ export default {
 	background-color: rgba(0, 0, 0, 0.3);
 	position: absolute;
 	top: 50%;
-	z-index: 33;
+	z-index: 9999;
 	margin-top: -40px;
 	transition: 0.2s;
 	cursor: pointer;
@@ -103,6 +103,7 @@ export default {
 	position: fixed;
 	left: 0;
 	right: 0;
+	z-index: 9999;
 	display: flex;
 	justify-content: center;
 	.toolbar {

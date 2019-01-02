@@ -61,6 +61,7 @@ export default {
 	left: 0;
 	right: 0;
 	bottom: 0;
+	z-index: 9999;
 	background: rgba($color: #000000, $alpha: 0.8);
 	.content {
 		display: flex;
