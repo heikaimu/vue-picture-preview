@@ -80,6 +80,7 @@ pictureList: [
 ```vue
 <Ppreview 
   :pictureList="pictureList"
+>
 </Ppreview>
 ```
 
@@ -103,6 +104,7 @@ defaultProps: {
 <Ppreview 
   :pictureList="pictureList"
   :defaultProps="defaultProps"
+>
 </Ppreview>
 ```
 
@@ -138,6 +140,7 @@ defaultProps: {
 <Ppreview 
   :pictureList="pictureList"
   :defaultProps="defaultProps"
+>
 </Ppreview>
 ```
 
@@ -164,3 +167,7 @@ addNewOne() {
  this.pictureList = [...this.pictureList, this.pictureList[num]];
 }
 ```
+
+### 后续
+
+之后会继续优化移动端上面的效果
