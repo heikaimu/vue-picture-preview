@@ -13,7 +13,6 @@ npm i vue-simple-picture-preview -S
 在需要使用的组件里面引入并注册：
 ```js
 import Ppreview from "vue-simple-picture-preview";
-...
 components: {
   Ppreview
 }
@@ -23,23 +22,23 @@ components: {
 
 ```vue
 <Ppreview 
-					:pictureList="pictureList"
-					:mouseScrollable="true"
-					:mouseScrollSpeed="0.1"
-					:width="160"
-					:height="160"
-					:borderRadius="10"
-					:spaceBetween="10"
-					:thumbnail="true"
-					:thumbnailWidth="50"
-					:thumbnailHeight="70"
-					:isEdit="true"
-					:containerWidth="800"
-					:center="false"
-					menuType="all"
-					@onDragstart="onDragstart"
-					@onDragend="onDragend"
-					@updateList="updateList"
-				>
-				</Ppreview>
+  :pictureList="pictureList"
+  :mouseScrollable="true"
+  :mouseScrollSpeed="0.1"
+  :width="160"
+  :height="160"
+  :borderRadius="10"
+  :spaceBetween="10"
+  :thumbnail="true"
+  :thumbnailWidth="50"
+  :thumbnailHeight="70"
+  :isEdit="true"
+  :containerWidth="800"
+  :center="false"
+  menuType="all"
+  @onDragstart="onDragstart"
+  @onDragend="onDragend"
+  @updateList="updateList"
+>
+</Ppreview>
 ```
