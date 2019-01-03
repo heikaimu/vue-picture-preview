@@ -95,7 +95,7 @@ pictureList: [
  "/t_s960x600c5/g5/M00/0B/00/ChMkJ1wcloOIIm70AAJ-NdKlhGkAAt6LAPg52EAAn5N148.jpg"
 ],
 defaultProps: {
-	domain: "https://desk-fd.zol-img.com.cn"
+ domain: "https://desk-fd.zol-img.com.cn"
 }
 ```
 
@@ -128,9 +128,9 @@ pictureList: [
  }
 ]
 defaultProps: {
-	originalKey: "original",
-	thumbnailKey: "thumbnail",
-	domain: "https://desk-fd.zol-img.com.cn"
+ originalKey: "original",
+ thumbnailKey: "thumbnail",
+ domain: "https://desk-fd.zol-img.com.cn"
 }
 ```
 
