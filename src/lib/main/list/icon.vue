@@ -75,7 +75,6 @@ export default {
 		right: 2px;
 		top: 2px;
 		transition: 0.2s;
-		cursor: pointer;
 		&:before {
 			content: "";
 			display: block;
@@ -90,19 +89,20 @@ export default {
 		}
 	}
 	&:hover {
-		&:after {
-			content: "";
-			display: block;
-			width: 30px;
-			height: 30px;
-			background: url("../../icons/view.png") no-repeat center center / cover;
-			position: absolute;
-			left: 50%;
-			margin-left: -15px;
-			top: 50%;
-			margin-top: -15px;
-			z-index: 9;
-		}
+		cursor: pointer;
+		// &:after {
+		// 	content: "";
+		// 	display: block;
+		// 	width: 30px;
+		// 	height: 30px;
+		// 	background: url("../../icons/view.png") no-repeat center center / cover;
+		// 	position: absolute;
+		// 	left: 50%;
+		// 	margin-left: -15px;
+		// 	top: 50%;
+		// 	margin-top: -15px;
+		// 	z-index: 9;
+		// }
 	}
 }
 .item-dragging .icon-wrapper {
@@ -111,19 +111,20 @@ export default {
 	animation-iteration-count: infinite;
 	animation-direction: alternate;
 	&:hover {
-		&:after {
-			content: "";
-			display: block;
-			width: 30px;
-			height: 30px;
-			background: url("../../icons/drag.png") no-repeat center center / cover;
-			position: absolute;
-			left: 50%;
-			margin-left: -15px;
-			top: 50%;
-			margin-top: -15px;
-			z-index: 9;
-		}
+		cursor: move;
+		// &:after {
+		// 	content: "";
+		// 	display: block;
+		// 	width: 30px;
+		// 	height: 30px;
+		// 	background: url("../../icons/drag.png") no-repeat center center / cover;
+		// 	position: absolute;
+		// 	left: 50%;
+		// 	margin-left: -15px;
+		// 	top: 50%;
+		// 	margin-top: -15px;
+		// 	z-index: 9;
+		// }
 	}
 }
 </style>

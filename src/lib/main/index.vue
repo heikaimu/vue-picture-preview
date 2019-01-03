@@ -55,7 +55,7 @@ export default {
 		},
 		spaceBetween: {
 			type: Number,
-			default: 5
+			default: 6
 		},
 		isEdit: {
 			type: Boolean,

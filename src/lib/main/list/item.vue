@@ -218,7 +218,6 @@ export default {
 	user-select: none;
 	transform: translate3d(0px, 0px, 0px);
 	z-index: 1;
-	cursor: pointer;
 }
 .item-animate {
 	transition: transform 800ms ease;
