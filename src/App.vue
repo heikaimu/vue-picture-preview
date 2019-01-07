@@ -14,7 +14,6 @@
 					:thumbnailWidth="50"
 					:thumbnailHeight="70"
 					:isEdit="true"
-					:containerWidth="800"
 					:center="false"
 					menuType="all"
 					@onDragstart="onDragstart"
@@ -80,10 +79,10 @@ export default {
 	},
 	methods: {
 		onDragstart() {
-			console.log("排序开始");
+			// console.log("排序开始");
 		},
 		onDragend() {
-			console.log("排序结束");
+			// console.log("排序结束");
 		},
 		updateList(list) {
 			this.pictureList = list;

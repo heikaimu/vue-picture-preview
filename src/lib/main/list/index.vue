@@ -1,6 +1,7 @@
 <template>
 	<div class="picture-list" :style="style">
 		<item v-for="item in list" 
+			ref="item"
 			:key="item.index" 
 			:index="item.index" 
 			:sort="item.sort" 
@@ -102,11 +103,14 @@ export default {
 		},
 		rowShift() {
 			if (this.center) {
-				let contentWidth = this.items.length * this.cellWidth;
+				let contentWidth =
+					this.items.length * (this.cellWidth + this.spaceBetween);
 				let rowShift =
 					contentWidth < this.gridResponsiveWidth
 						? (this.gridResponsiveWidth - contentWidth) / 2
-						: (this.gridResponsiveWidth % contentWidth) / 2;
+						: (this.gridResponsiveWidth %
+								(this.cellWidth + this.spaceBetween)) /
+						  2;
 				return Math.floor(rowShift);
 			} else {
 				return 0;
@@ -114,15 +118,15 @@ export default {
 		},
 		height() {
 			return (
-				Math.ceil(this.items.length / this.rowCount) *
+				Math.ceil(this.list.length / this.rowCount) *
 				(this.cellHeight + this.spaceBetween)
 			);
 		},
 		style() {
 			return {
-				height: this.height + "px",
-				marginLeft: -this.spaceBetween / 2 + "px",
-				marginRight: -this.spaceBetween / 2 + "px"
+				height: this.height + "px"
+				// marginLeft: -this.spaceBetween / 2 + "px",
+				// marginRight: -this.spaceBetween / 2 + "px"
 			};
 		}
 	},

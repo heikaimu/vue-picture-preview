@@ -105,6 +105,15 @@ export default {
 				: Math.floor(this.sort / this.rowCount) * this.cellHeight;
 		}
 	},
+	watch: {
+		dragging() {
+			if (this.dragging) {
+				document.body.style.overflow = "hidden";
+			} else {
+				document.body.style.overflow = "auto";
+			}
+		}
+	},
 	methods: {
 		// 公用事件返回
 		wrapEvent(event) {

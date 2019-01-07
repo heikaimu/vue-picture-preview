@@ -1,6 +1,6 @@
 <template>
   <div class="swiper-wrapper" @mousedown="mousedown" @touchstart.stop="mousedown" ref="imgWrapper">
-    <img :src="imgSrc" alt="" :style="style">
+    <img :src="imgSrc" alt="" :style="style" @click="preventDefault">
   </div>
 </template>
 
@@ -55,6 +55,9 @@ export default {
 		this.$refs.imgWrapper.addEventListener("mousewheel", this.mouseScroll);
 	},
 	methods: {
+		preventDefault(event) {
+			event.preventDefault();
+		},
 		mousedown(event) {
 			this.dragStart(event);
 			document.addEventListener("mouseup", this.documentMouseUp);
@@ -62,7 +65,6 @@ export default {
 		},
 		dragStart(event) {
 			let e = event.touches ? event.touches[0] : event;
-			e.preventDefault();
 			this.shiftX = this.shiftStartX = this.left;
 			this.shiftY = this.shiftStartY = this.top;
 			this.mouseMoveStartX = e.pageX;

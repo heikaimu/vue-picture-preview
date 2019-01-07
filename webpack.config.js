@@ -6,10 +6,10 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "./dist"),
     publicPath: "/dist/",
-    filename: "build.js"
-    // filename: "picture-preview.min.js",
-    // library: "PicturePreview",
-    // libraryTarget: "umd"
+    // filename: "build.js"
+    filename: "picture-preview.min.js",
+    library: "PicturePreview",
+    libraryTarget: "umd"
   },
   module: {
     rules: [

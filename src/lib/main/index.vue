@@ -99,7 +99,8 @@ export default {
 			listItems: [],
 			floatItems: [],
 			showFloat: false,
-			initSlide: -1
+			initSlide: -1,
+			timer: null
 		};
 	},
 	watch: {
@@ -168,11 +169,19 @@ export default {
 			}
 		},
 		onClick(data) {
-			this.initSlide = data.sort;
-			this.floatItems = data.event.items;
-			this.showFloat = true;
+			// 点击之后设置延迟，延迟之后才真正触发点击事件，主要是为了和删除按钮区分开来
+			this.timer = setTimeout(() => {
+				this.initSlide = data.sort;
+				this.floatItems = data.event.items;
+				this.showFloat = true;
+			}, 500);
 		},
 		sort(data) {
+			// 如果是删除的时候，数据有变化，此时清楚延迟器，阻止点击事件触发
+			if (this.timer) {
+				clearTimeout(this.timer);
+				this.timer = null;
+			}
 			const list = data.items.map(item => {
 				return item.item.main;
 			});

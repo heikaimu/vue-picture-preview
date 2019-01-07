@@ -1,6 +1,6 @@
 <template>
   <div class="icon-wrapper" :style="style">
-		<div class="remove-icon" @mousedown="removeItem()" v-if="draggable"></div>
+		<div class="remove-icon" @mousedown="removeItem()" @touchstart="removeItem()" v-if="draggable"></div>
 	</div>
 </template>
 
@@ -47,7 +47,7 @@ export default {
 		}
 	},
 	methods: {
-		removeItem() {
+		removeItem(e) {
 			this.$emit("removeItem", this.item);
 		}
 	}
