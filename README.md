@@ -164,6 +164,17 @@ addNewOne() {
 }
 ```
 
+#### 整体更换数据列表时
+
+```
+<Ppreview ref="preview"/>
+this.pictureList = [
+ "https://desk-fd.zol-img.com.cn/t_s960x600c5/g5/M00/0B/00/ChMkJ1wcloOIIm70AAJ-NdKlhGkAAt6LAPg52EAAn5N148.jpg",
+ "https://desk-fd.zol-img.com.cn/t_s960x600c5/g5/M00/0B/00/ChMkJ1wcloSITAcKAAMLsFkEUtAAAt6LAPvhBMAAwvI448.jpg"
+];
+this.$refs.preview.refresh();
+```
+
 ### 后续
 
 之后会继续优化移动端上面的效果

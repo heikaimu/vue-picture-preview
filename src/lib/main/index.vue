@@ -1,31 +1,8 @@
 <template>
 	<div class="preview-container">
-		<picture-list 
-			:items="listItems"
-			:cellWidth="width"
-			:cellHeight="height"
-			:borderRadius="borderRadius"
-			:spaceBetween="spaceBetween"
-			:draggable="isEdit"
-			:containerWidth="containerWidth"
-			:center="center"
-			@sort="sort"
-			@click="onClick"
-			@onDragstart="onDragstart"
-			@onDragend="onDragend"
-			>
+		<picture-list :items="listItems" :cellWidth="width" :cellHeight="height" :borderRadius="borderRadius" :spaceBetween="spaceBetween" :draggable="isEdit" :containerWidth="containerWidth" :center="center" @sort="sort" @click="onClick" @onDragstart="onDragstart" @onDragend="onDragend">
 		</picture-list>
-		<picture-float
-			:items="floatItems"
-			:initSlide.sync="initSlide"
-			:show.sync="showFloat"
-			:mouseScrollable="mouseScrollable"
-			:mouseScrollSpeed="mouseScrollSpeed"
-			:thumbnail="thumbnail"
-			:thumbnailWidth="thumbnailWidth"
-			:thumbnailHeight="thumbnailHeight"
-			:menuType="menuType"
-		>
+		<picture-float :items="floatItems" :initSlide.sync="initSlide" :show.sync="showFloat" :mouseScrollable="mouseScrollable" :mouseScrollSpeed="mouseScrollSpeed" :thumbnail="thumbnail" :thumbnailWidth="thumbnailWidth" :thumbnailHeight="thumbnailHeight" :menuType="menuType">
 		</picture-float>
 	</div>
 </template>
@@ -123,6 +100,11 @@ export default {
 		}
 	},
 	methods: {
+		refresh() {
+			setTimeout(() => {
+				this.createdList(this.pictureList);
+			}, 50);
+		},
 		createdList(nextItems) {
 			if (nextItems.length !== 0) {
 				if (typeof nextItems[0] === "object") {

@@ -2,27 +2,11 @@
 	<div id="app">
 		<div class="content-box">
 			<div>
-				<ppview 
-					:pictureList="pictureList"
-					:mouseScrollable="true"
-					:mouseScrollSpeed="0.1"
-					:width="100"
-					:height="100"
-					:borderRadius="5"
-					:spaceBetween="6"
-					:thumbnail="true"
-					:thumbnailWidth="50"
-					:thumbnailHeight="70"
-					:isEdit="true"
-					:center="false"
-					menuType="all"
-					@onDragstart="onDragstart"
-					@onDragend="onDragend"
-					@updateList="updateList"
-				>
+				<ppview :pictureList="pictureList" :mouseScrollable="true" :mouseScrollSpeed="0.1" :width="100" :height="100" :borderRadius="5" :spaceBetween="6" :thumbnail="true" :thumbnailWidth="50" :thumbnailHeight="70" :isEdit="true" :center="false" menuType="all" @onDragstart="onDragstart" @onDragend="onDragend" @updateList="updateList" ref="preview">
 				</ppview>
 			</div>
 			<button @click="addNewOne">新增</button>
+			<button @click="changeList">改变列表</button>
 		</div>
 	</div>
 </template>
@@ -93,6 +77,13 @@ export default {
 			num = Math.max(num, 0);
 			num = Math.min(num, this.pictureList.length - 1);
 			this.pictureList = [...this.pictureList, this.pictureList[num]];
+		},
+		changeList() {
+			this.pictureList = [
+				"https://desk-fd.zol-img.com.cn/t_s960x600c5/g5/M00/0B/00/ChMkJ1wcloOIIm70AAJ-NdKlhGkAAt6LAPg52EAAn5N148.jpg",
+				"https://desk-fd.zol-img.com.cn/t_s960x600c5/g5/M00/0B/00/ChMkJ1wcloSITAcKAAMLsFkEUtAAAt6LAPvhBMAAwvI448.jpg"
+			];
+			this.$refs.preview.refresh();
 		}
 	},
 	components: {
