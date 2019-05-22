@@ -1,6 +1,6 @@
 ## vue 图片预览与编辑插件
 
-#### 什么时候我可能会用到它，在后台管理中需要对图片进行编辑的时候你可以尝试使用它
+#### 什么时候我可能会用到它，在后台管理中需要对图片进行编辑（增删拖拽排序）的时候你可以尝试使用它
 
 [演示地址](https://heikaimu.github.io/picture-preview-example/dist/#/index/example)
 
