@@ -156,22 +156,31 @@ defaultProps: {
 
 ```
 addNewOne() {
- let num = Math.random() * this.pictureList.length - 1;
- num = Math.round(num);
- num = Math.max(num, 0);
- num = Math.min(num, this.pictureList.length - 1);
- this.pictureList = [...this.pictureList, this.pictureList[num]];
+ this.pictureList = [...this.pictureList, xxxx.jpg];
+}
+```
+```
+addNewMore() {
+ const newPictures = [xxx1.jpg, xxx2.jpg];
+ this.pictureList = [...this.pictureList, ...newPictures];
 }
 ```
 
 #### 整体更换数据列表时
+比如说当你需要点击另外一个产品的详情的时候或者需要清空列表的时候
 
 ```
+// 整体替换
 <Ppreview ref="preview"/>
 this.pictureList = [
  "https://desk-fd.zol-img.com.cn/t_s960x600c5/g5/M00/0B/00/ChMkJ1wcloOIIm70AAJ-NdKlhGkAAt6LAPg52EAAn5N148.jpg",
  "https://desk-fd.zol-img.com.cn/t_s960x600c5/g5/M00/0B/00/ChMkJ1wcloSITAcKAAMLsFkEUtAAAt6LAPvhBMAAwvI448.jpg"
 ];
+this.$refs.preview.refresh();
+```
+```
+// 清空列表
+this.pictureList = [];
 this.$refs.preview.refresh();
 ```
 
